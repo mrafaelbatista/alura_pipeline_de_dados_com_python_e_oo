@@ -3,48 +3,6 @@ import csv
 
 from processamento_dados import Dados
 
-# def leitura_json(path_json):
-#     dados_json = []
-#     with open(path_json, 'r') as file:
-#         dados_json = json.load(file)
-    
-#     return dados_json
-
-
-# def leitura_csv(path_csv):
-#     dados_csv = []
-#     with open(path_csv, 'r') as file:
-#         spamreader = csv.DictReader(file, delimiter=',')
-#         for row in spamreader:
-#             dados_csv.append(row)
-            
-#     return dados_csv
-
-
-# def leitura_dados(path, tipo_arquivo):
-#     dados = []
-    
-#     if tipo_arquivo == 'csv':
-#         dados = leitura_csv(path)
-#     elif tipo_arquivo == 'json':
-#         dados = leitura_json(path)
-        
-#     return dados
-
-
-# def get_columns(dados):
-#     return list(dados[-1].keys())
-
-
-def rename_columns(dados, key_mapping):
-    new_dados_csv = []
-
-    for old_dict in dados:
-        dict_temp = {}
-        for old_key, value in old_dict.items():
-            dict_temp[key_mapping[old_key]] = value
-        new_dados_csv.append(dict_temp)
-    return new_dados_csv
 
 
 def size_data(dados):
@@ -79,8 +37,25 @@ def salvando_dados(dados, path):
 path_json = 'data_raw/dados_empresaA.json'
 path_csv = 'data_raw/dados_empresaB.csv'
 
-dados_empresaA = Dados(path_json, 'json')
 
+# Extract
+
+dados_empresaA = Dados(path_json, 'json')
+print(dados_empresaA.nome_colunas)
+
+dados_empresaB = Dados(path_csv, 'csv')
+print(dados_empresaB.nome_colunas)
+
+# Transform
+key_mapping = {'Nome do Item': 'Nome do Produto',
+                'Classificação do Produto': 'Categoria do Produto',
+                'Valor em Reais (R$)': 'Preço do Produto (R$)',
+                'Quantidade em Estoque': 'Quantidade em Estoque',
+                'Nome da Loja': 'Filial',
+                'Data da Venda': 'Data da Venda'}
+
+dados_empresaB.rename_columns(key_mapping)
+print(dados_empresaB.nome_colunas)
 
 
 # # Iniciando a leitura
@@ -100,12 +75,7 @@ dados_empresaA = Dados(path_json, 'json')
 
 
 # # Transformação dos dados
-# key_mapping = {'Nome do Item': 'Nome do Produto',
-#                 'Classificação do Produto': 'Categoria do Produto',
-#                 'Valor em Reais (R$)': 'Preço do Produto (R$)',
-#                 'Quantidade em Estoque': 'Quantidade em Estoque',
-#                 'Nome da Loja': 'Filial',
-#                 'Data da Venda': 'Data da Venda'}
+
 
 # dados_csv = rename_columns(dados_csv, key_mapping)
 # nome_colunas_csv = get_columns(dados_csv)
